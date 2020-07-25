@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+import ButtonClick from './button';
 
 export default class Bug extends React.Component {
     constructor(props) {
         super(props);
        this.state = {
          data: '',
-         pest: ''
+         pest: '',
+         error:'',
+         uploadError: false
        };
     }
 
@@ -16,10 +19,11 @@ export default class Bug extends React.Component {
 
       onChange = e => {
         const files = Array.from(e.target.files)
-        this.setState({ uploading: true })
+        this.setState({ uploading: false })
         this.setState({ uploaded: false })
         this.setState({data: ""})
         this.setState({pest:""})
+        this.setState({error:""})
 
         console.log("files = " + files[0]);
   
@@ -43,18 +47,31 @@ export default class Bug extends React.Component {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({'img': rawLog})
             };
-            fetch('http://localhost:3001/detect', requestOptions)
+            fetch('http://192.168.1.4:3001/detect', requestOptions)
                 .then(response => response.json())
                 .then(function(response){
-                    console.log(response.img_guess)
-                    this.setState({
-                        data: response.img_guess,
-                        pest: response.is_pest
-                    })
+                    if(response.img_guess !== undefined){
+                        console.log(response.img_guess)
+                        this.setState({
+                            data: response.img_guess,
+                            pest: response.is_pest,
+                            upload: false,
+                            uploaded: true
+    
+                        })
+                    }else{
+                        console.log("invalid")
+                        this.setState({
+                            error: response.error,
+                            uploadError: true,
+                            upload: false,
+                            uploaded: false
+                        })
+                    }
+                   
                 }.bind(this))
         }.bind(this);
-        this.setState({ uploading: false })
-        this.setState({ uploaded: true })
+     
 
     }
 
@@ -62,23 +79,50 @@ export default class Bug extends React.Component {
         const { uploading, images,uploaded} = this.state
         var someData = this.state.data;
         var someData2 = this.state.pest
+        var uploadErrorData = this.state.error
+        var uploadErrorState = this.state.uploadError
+    
+        const apiData = () => {
+            return (
+                <header id="aboutHeader" className="App-header3">
+                <h1>I think it's a {someData}. Pest: {someData2}</h1>
+                <ButtonClick/>
+                </header>
+            
+            )
+        }
 
+        const fileUpload = () => {
+           return (
+           <input type='file' id='single-image' onChange={this.onChange} />
+           )
+        }
+
+        const uploadErrorHappened = () =>{
+            return (
+            <header id="aboutHeader" className="App-header3">
+              <h1>{uploadErrorData}</h1>
+              <ButtonClick/>
+             </header>
+            )
+        }
         const content = () => {
+            
             switch(true) {
-              case uploading:
-                return  <div><h1>Uploading Image...</h1></div>
                case uploaded:
-                return <h1>I think it's a {someData}. Pest: {someData2}</h1>
+                return apiData()
+                case uploadErrorState:
+                 return uploadErrorHappened()
               default:
-                return <input type='file' id='single-image' onChange={this.onChange} />
+                return fileUpload()
             }
           }
 
         return(
+            
           <header id="aboutHeader" className="App-header3">
-           <h1>Bug Guesser</h1>
+            <h1>Bug Guesser</h1>
            {content()}
-           <h1>{this.state.uploaded}</h1>
           </header>
           
         )
