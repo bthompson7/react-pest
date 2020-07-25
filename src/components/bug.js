@@ -19,10 +19,11 @@ export default class Bug extends React.Component {
         this.setState({ uploading: true })
         this.setState({ uploaded: false })
         this.setState({data: ""})
-        this.setState({pest:''})
+        this.setState({pest:""})
 
         console.log("files = " + files[0]);
   
+        //convert image to base64 to send to api
         let reader = new FileReader();
         reader.readAsDataURL(files[0]);
         reader.onerror = function (error) {
@@ -36,6 +37,7 @@ export default class Bug extends React.Component {
             rawLog = reader.result;
             console.log(JSON.stringify({img: rawLog}));
 
+            //send base64 to api for detection
             const requestOptions = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -64,9 +66,9 @@ export default class Bug extends React.Component {
         const content = () => {
             switch(true) {
               case uploading:
-                return  <div><h1>{this.state.data}</h1></div>
+                return  <div><h1>Uploading Image...</h1></div>
                case uploaded:
-                return <h1>I think it's a {someData}. Pest Status: {someData2}</h1>
+                return <h1>I think it's a {someData}. Pest: {someData2}</h1>
               default:
                 return <input type='file' id='single-image' onChange={this.onChange} />
             }

@@ -47,13 +47,12 @@ def detectInsect():
 	inputResult = inputTest.match(image_data)
 	print(type(image_data))
 
-	image_data2 = re.sub(r'[^data:image/jpeg;base64]{1}', '', image_data)
+	image_data2 = re.sub(r'[^data:image/[jpeg|jpg|png]+;base64]{1}', '', image_data)
 	image_data2 = image_data.replace("data:image/jpeg;base64,", "")
-	print("WORKING!!!!!!!!!!!!1")
-	print(image_data2)
+	#print(image_data2) #for debugging 
 	if inputResult == None:
 		print("Invalid Input")
-		return jsonify(error="Invalid input"), 404
+		return jsonify(error="Invalid input"), 400
 	else:
 		print("Input is good")
 
@@ -80,7 +79,7 @@ def detectInsect():
 		if guess == insect:
 			is_pest = 'yes'
 	keras.backend.clear_session()
-	return jsonify(img_guess=guess,is_pest=is_pest)
+	return jsonify(img_guess=guess,is_pest=is_pest),200
 
 resource = WSGIResource(reactor, reactor.getThreadPool(), app)
 site = Site(resource)
