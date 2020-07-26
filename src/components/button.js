@@ -6,7 +6,7 @@ export default class ButtonClick extends Component {
     
     render() {
         return(
-            <Button variant="primary" size="lg" href="http://192.168.1.4:3000">Go Home</Button>
+            <Button variant="primary" href="http://192.168.1.4:3000">Go Home</Button>
         )
       }
 

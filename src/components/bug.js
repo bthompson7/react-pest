@@ -60,7 +60,7 @@ export default class Bug extends React.Component {
     
                         })
                     }else{
-                        console.log("invalid")
+                        console.log("invalid file type")
                         this.setState({
                             error: response.error,
                             uploadError: true,
@@ -84,8 +84,8 @@ export default class Bug extends React.Component {
     
         const apiData = () => {
             return (
-                <header id="aboutHeader" className="App-header3">
-                <h1>I think it's a {someData}. Pest: {someData2}</h1>
+                <header id="aboutHeader" className="App-info">
+                <h1 class="success">I think it's a {someData}. Pest: {someData2}</h1>
                 <ButtonClick/>
                 </header>
             
@@ -100,10 +100,11 @@ export default class Bug extends React.Component {
 
         const uploadErrorHappened = () =>{
             return (
-            <header id="aboutHeader" className="App-header3">
-              <h1>{uploadErrorData}</h1>
+            <header id="aboutHeader" className="App-info">
+              <h1 class="error">Error: {uploadErrorData}</h1>
               <ButtonClick/>
              </header>
+             
             )
         }
         const content = () => {
@@ -122,6 +123,7 @@ export default class Bug extends React.Component {
             
           <header id="aboutHeader" className="App-header3">
             <h1>Bug Guesser</h1>
+            <h2>Upload an image to see what bug it contains!</h2>
            {content()}
           </header>
           

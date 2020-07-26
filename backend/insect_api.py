@@ -41,20 +41,18 @@ inputTest = re.compile("^data:image")
 pests = ["Hornworm","Japanese Beetle","Browntail Moth"]
 @app.route('/detect', methods=['POST'])
 def detectInsect():
-	print("Incoming request...\n")
+	print("Incoming request...")
 	jsonData = request.get_json()
 	image_data = jsonData['img']
 	inputResult = inputTest.match(image_data)
-	print(type(image_data))
-
-	image_data2 = re.sub(r'[^data:image/[jpeg|jpg|png]+;base64]{1}', '', image_data)
-	image_data2 = image_data.replace("data:image/jpeg;base64,", "")
-	#print(image_data2) #for debugging 
 	if inputResult == None:
 		print("Invalid Input")
 		return jsonify(error="Invalid input"), 400
 	else:
 		print("Input is good")
+	image_data2 = re.sub(r'[^data:image/[jpeg|jpg|png]+;base64]{1}', '', image_data)
+	image_data2 = image_data.replace("data:image/jpeg;base64,", "")
+	#print(image_data2) #for debugging 
 
 	image_bytes = str.encode(image_data2)
 	type(image_bytes)
@@ -65,6 +63,7 @@ def detectInsect():
 	with open(image_to_test, "wb") as fh:
 		 fh.write(base64.decodebytes(image_bytes))
 
+	print("Detecting image...")
 	img = imread(image_to_test)
 	img = resize(img, (150, 150))
 	img = np.expand_dims(img, axis=0)

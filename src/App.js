@@ -6,9 +6,7 @@ import Bug from './components/bug.js';
 
 function App() {
   return (
-    <header className="App-header">
       <Bug/>      
-    </header>
   );
 }
 
