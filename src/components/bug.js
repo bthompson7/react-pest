@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ButtonClick from './button';
-
+import LoadingSpinner from './spinner'
 export default class Bug extends React.Component {
     constructor(props) {
         super(props);
@@ -8,7 +8,9 @@ export default class Bug extends React.Component {
          data: '',
          pest: '',
          error:'',
-         uploadError: false
+         uploadError: false,
+         image: '',
+         upload:false
        };
     }
 
@@ -19,7 +21,7 @@ export default class Bug extends React.Component {
 
       onChange = e => {
         const files = Array.from(e.target.files)
-        this.setState({ uploading: false })
+        this.setState({ upload: true })
         this.setState({ uploaded: false })
         this.setState({data: ""})
         this.setState({pest:""})
@@ -40,6 +42,7 @@ export default class Bug extends React.Component {
             var component = this;
             rawLog = reader.result;
             console.log(JSON.stringify({img: rawLog}));
+            this.setState({image:rawLog})
 
             //send base64 to api for detection
             const requestOptions = {
@@ -81,10 +84,13 @@ export default class Bug extends React.Component {
         var someData2 = this.state.pest
         var uploadErrorData = this.state.error
         var uploadErrorState = this.state.uploadError
+        var uploadImage = this.state.upload
     
         const apiData = () => {
             return (
+                
                 <header id="aboutHeader" className="App-info">
+                <img class="photo" src={this.state.image} />
                 <h1 class="success">I think it's a {someData}. Pest: {someData2}</h1>
                 <ButtonClick/>
                 </header>
@@ -107,18 +113,27 @@ export default class Bug extends React.Component {
              
             )
         }
+
+        const whileUploading = () => {
+            return <LoadingSpinner/>
+        }
+
+
         const content = () => {
             
             switch(true) {
                case uploaded:
-                return apiData()
+                   return apiData()
+                case uploadImage:
+                    return whileUploading()
                 case uploadErrorState:
-                 return uploadErrorHappened()
-              default:
-                return fileUpload()
+                    return uploadErrorHappened()
+               default:
+                    return fileUpload()
             }
           }
 
+           
         return(
             
           <header id="aboutHeader" className="App-header3">

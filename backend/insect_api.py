@@ -50,9 +50,16 @@ def detectInsect():
 		return jsonify(error="Invalid input"), 400
 	else:
 		print("Input is good")
-	image_data2 = re.sub(r'[^data:image/[jpeg|jpg|png]+;base64]{1}', '', image_data)
-	image_data2 = image_data.replace("data:image/jpeg;base64,", "")
-	#print(image_data2) #for debugging 
+	#image_data2 = re.sub("[^data:image/(jpeg|jpg|png){1};base64,]+", "", image_data)
+	#image_data2 = image_data.replace("[^data:image/[jpeg|jpg|png]{1};base64]{1},", "")
+	if "data:image/png;base64," in image_data:
+		print("png format")
+		return jsonify(error=".png is not supported"),500
+	else:
+		print("jpeg/jpg")
+		image_data2 = image_data.replace("data:image/jpeg;base64,", "")
+
+	print(image_data2) #for debugging 
 
 	image_bytes = str.encode(image_data2)
 	type(image_bytes)
@@ -61,18 +68,16 @@ def detectInsect():
 	print("Reading image...\n")
 	image_to_test = 'image_to_test.jpg'
 	with open(image_to_test, "wb") as fh:
-		 fh.write(base64.decodebytes(image_bytes))
-
+		fh.write(base64.decodebytes(image_bytes))
 	print("Detecting image...")
 	img = imread(image_to_test)
 	img = resize(img, (150, 150))
 	img = np.expand_dims(img, axis=0)
 	if(np.max(img)>1):
-    		img = img/255.0
+		img = img/255.0
 	pred = model.predict_classes(img,verbose=1)
 	guess = class_labels[pred[0]]
 	print("I think its a %s\n"%guess)
-
 	is_pest = 'no'
 	for insect in pests:
 		if guess == insect:
