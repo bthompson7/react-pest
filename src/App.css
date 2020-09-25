@@ -46,14 +46,21 @@
   background-color: #282c34;
   font-size: calc(10px + 2vmin);
   color: white;
-  justify-content: center; 
+  justify-content: center
 }
 
 .photo {
-  height: 300px;
-  width: 300px;
+  
+  height: 200px;
+  width: 200px;
 
 }
+
+.photo-div{ 
+  Display: flex;
+  Align-Items: center;
+  Justify-Content: center;
+  }
 
 .App-link {
   color: #61dafb;

@@ -50,7 +50,7 @@ export default class Bug extends React.Component {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({'img': rawLog})
             };
-            fetch('http://192.168.1.4:3001/detect', requestOptions)
+            fetch('http://192.168.1.6:3001/detect', requestOptions)
                 .then(response => response.json())
                 .then(function(response){
                     if(response.img_guess !== undefined){
@@ -90,17 +90,19 @@ export default class Bug extends React.Component {
             return (
                 
                 <header id="aboutHeader" className="App-info">
-                <img class="photo" src={this.state.image} />
+                    <div class="photo-div">
+                    <img class="photo" src={this.state.image} />
+                    </div>
                 <h1 class="success">I think it's a {someData}. Pest: {someData2}</h1>
                 <ButtonClick/>
                 </header>
-            
+    
             )
         }
 
         const fileUpload = () => {
            return (
-           <input type='file' id='single-image' onChange={this.onChange} />
+           <input type='file' accept=".jpg, .jpeg" id='single-image' onChange={this.onChange} />
            )
         }
 
@@ -137,7 +139,7 @@ export default class Bug extends React.Component {
         return(
             
           <header id="aboutHeader" className="App-header3">
-            <h1>Bug Guesser</h1>
+            <h1>Bug Detector </h1>
             <h2>Upload an image to see what bug it contains!</h2>
            {content()}
           </header>
